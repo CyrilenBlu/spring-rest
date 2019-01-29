@@ -43,11 +43,11 @@ public class UserController {
 //
 //        model.addAttribute("users", apiService.getUsersReactive(Mono.just(limit)));
 
-//        model.addAttribute("users",
-//                apiService
-//                        .getUsers(serverWebExchange
-//                                .getFormData()
-//                                .map(data -> new Integer(data.getFirst("limit")))));
+        model.addAttribute("users",
+                apiService
+                        .getUsersReactive(serverWebExchange
+                                .getFormData()
+                                .map(data -> new Integer(data.getFirst("limit"))-1)));
 
         return "userlist";
     }
