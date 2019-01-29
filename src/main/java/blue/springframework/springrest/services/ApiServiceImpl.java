@@ -2,6 +2,7 @@ package blue.springframework.springrest.services;
 
 import blue.springframework.api.domain.User;
 import blue.springframework.api.domain.UserData;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -15,8 +16,11 @@ import java.util.List;
 public class ApiServiceImpl implements ApiService {
     private RestTemplate restTemplate;
 
-    public ApiServiceImpl(RestTemplate restTemplate) {
+    private final String api_url;
+
+    public ApiServiceImpl(RestTemplate restTemplate, @Value("${api.url}") String api_url) {
         this.restTemplate = restTemplate;
+        this.api_url = api_url;
     }
 
     @Override
@@ -29,7 +33,7 @@ public class ApiServiceImpl implements ApiService {
     public Flux<User> getUsersReactive(Mono<Integer> limit) {
 
         return limit.flatMapMany(integer ->
-                WebClient.create("http://apifaketory.com/api/user?limit=" + limit)
+                WebClient.create(api_url + limit)
                         .get()
                         .uri(uriBuilder -> uriBuilder.queryParam("limit", integer).build())
                         .accept(MediaType.APPLICATION_JSON)
